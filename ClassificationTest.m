@@ -136,7 +136,7 @@ for m=1:480
 end
 % end loop.
 
-imtool(output);
+% imtool(output);
 
 
 %  again
@@ -144,20 +144,24 @@ x=zeros(3,50,5);
 m=1;
 n=1;
 for a=1:5
-    b=1;
-    for b=1:1:50
-        x1=round(rand(1)*479);
-        y=round(rand(1)*609);
+    ff=1;
+    for b=ff:1:50
+        x1=round(rand(1)*479)+1;
+        y=round(rand(1)*609)+1;
         
         point=zeros(3,1);
         point(1,1)=output(x1,y,1);
         point(2,1)=output(x1,y,2);
         point(3,1)=output(x1,y,3);
         
-        if ~isequal(point,colors(:,a))
-            aaa=b-1;
-            b=aaa;
-            continue;
+        while( ~isequal(point,colors(:,a)))
+            x1=round(rand(1)*479)+1;
+            y=round(rand(1)*609)+1;
+        
+            point=zeros(3,1);
+            point(1,1)=output(x1,y,1);
+            point(2,1)=output(x1,y,2);
+            point(3,1)=output(x1,y,3);
         end
         
         point(1,1)=pic(x1,y,1);
@@ -203,7 +207,7 @@ for m=1:480
             % Euclidean distance
             E_dist(k,1)=sqrt((point(1,1)-mean_vector(1,k))^2+(point(2,1)-mean_vector(2,k))^2+(point(3,1)-mean_vector(3,k))^2);
             % Mahalanobis distance
-            M_dist(k,1)=(point-mean_vector(:,k))'*inv(cov_matrix(:,:,k))*(point-mean_vector(:,k))*10^(15);
+            M_dist(k,1)=(point-mean_vector(:,k))'*inv(cov_matrix(:,:,k))*(point-mean_vector(:,k));
             
             if E_dist(k,1)<min_E_dist
                 min_E_dist=E_dist(k,1);
