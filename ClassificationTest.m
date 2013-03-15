@@ -114,11 +114,13 @@ for m=1:480
             % Mahalanobis distance
             M_dist=(point-mean_vector(:,k))'*inv(cov_matrix(:,:,k))*(point-mean_vector(:,k))*10^(-7);
             
+            % Find the min Euclidean distance
             if E_dist<min_E_dist
                 min_E_dist=E_dist;
                 min_E_index=k;
             end
             
+            % Find the min Mahalanobis distance
             if M_dist<min_M_dist
                 min_M_dist=M_dist;
                 min_M_index=k;
@@ -127,6 +129,7 @@ for m=1:480
         end
         
 % classify
+% when need to use the Mahalanobis Distance to calc, replace the "min_E_index" with "min_M_index" below
     output(m,n,1)=colors(1,min_E_index);
     output(m,n,2)=colors(2,min_E_index);
     output(m,n,3)=colors(3,min_E_index);
@@ -134,4 +137,5 @@ for m=1:480
 end
 % end loop.
 
+% save the result image to disk. In this case, the Eulidean Distance result.
 imwrite(output,'./EuclideanDistance Result.jpg','jpg');
