@@ -104,37 +104,34 @@ for m=1:480
         point(2,1)=pic(m,n,2);
         point(3,1)=pic(m,n,3);
 % calc the E dis and the M dis between the mean vector
-        E_dist=zeros(5,1);
-        M_dist=zeros(5,1);
         min_E_dist=255;
         min_M_dist=255;
         min_E_index=0;
         min_M_index=0;
         for k=1:5
             % Euclidean distance
-            E_dist(k,1)=sqrt((point(1,1)-mean_vector(1,k))^2+(point(2,1)-mean_vector(2,k))^2+(point(3,1)-mean_vector(3,k))^2);
+            E_dist=sqrt((point(1,1)-mean_vector(1,k))^2+(point(2,1)-mean_vector(2,k))^2+(point(3,1)-mean_vector(3,k))^2);
             % Mahalanobis distance
-            M_dist(k,1)=(point-mean_vector(:,k))'*inv(cov_matrix(:,:,k))*(point-mean_vector(:,k))*10^(-7);
+            M_dist=(point-mean_vector(:,k))'*inv(cov_matrix(:,:,k))*(point-mean_vector(:,k))*10^(-7);
             
-            if E_dist(k,1)<min_E_dist
-                min_E_dist=E_dist(k,1);
+            if E_dist<min_E_dist
+                min_E_dist=E_dist;
                 min_E_index=k;
             end
             
-            if M_dist(k,1)<min_M_dist
-                min_M_dist=M_dist(k,1);
+            if M_dist<min_M_dist
+                min_M_dist=M_dist;
                 min_M_index=k;
             end
             
         end
         
 % classify
-    output(m,n,1)=colors(1,min_M_index);
-    output(m,n,2)=colors(2,min_M_index);
-    output(m,n,3)=colors(3,min_M_index);
+    output(m,n,1)=colors(1,min_E_index);
+    output(m,n,2)=colors(2,min_E_index);
+    output(m,n,3)=colors(3,min_E_index);
     end
 end
 % end loop.
 
-imtool(output);
-
+imwrite(output,'./EuclideanDistance Result.jpg','jpg');
