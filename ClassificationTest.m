@@ -136,16 +136,17 @@ for m=1:480
 end
 % end loop.
 
-% imtool(output);
+imtool(output);
 
 
 %  again
-x=zeros(3,50,5);
+training_size=10;
+x=zeros(3,training_size,5);
 m=1;
 n=1;
 for a=1:5
     ff=1;
-    for b=ff:1:50
+    for b=ff:1:training_size
         x1=round(rand(1)*479)+1;
         y=round(rand(1)*609)+1;
         
@@ -180,7 +181,7 @@ for m=1:5
     mean_vector(2,m)=mean(x(2,:,m));
     mean_vector(3,m)=mean(x(3,:,m));
     % To calc the covariance
-    Temp=zeros(50,3);
+    Temp=zeros(training_size,3);
     Temp(:,1)=x(1,:,m);
     Temp(:,2)=x(2,:,m);
     Temp(:,3)=x(3,:,m);
