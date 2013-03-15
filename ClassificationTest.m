@@ -138,3 +138,91 @@ end
 
 imtool(output);
 
+
+%  again
+x=zeros(3,50,5);
+m=1;
+n=1;
+for a=1:5
+    b=1;
+    for b=1:1:50
+        x1=round(rand(1)*479);
+        y=round(rand(1)*609);
+        
+        point=zeros(3,1);
+        point(1,1)=output(x1,y,1);
+        point(2,1)=output(x1,y,2);
+        point(3,1)=output(x1,y,3);
+        
+        if ~isequal(point,colors(:,a))
+            aaa=b-1;
+            b=aaa;
+            continue;
+        end
+        
+        point(1,1)=pic(x1,y,1);
+        point(2,1)=pic(x1,y,2);
+        point(3,1)=pic(x1,y,3);
+        x(:,b,a)=point;
+    end
+end
+
+mean_vector=zeros(3,5);
+cov_matrix =zeros(3,3,5);
+% loop. for each class
+for m=1:5
+% calc the mean vector and the covariance matrix
+    mean_vector(1,m)=mean(x(1,:,m));
+    mean_vector(2,m)=mean(x(2,:,m));
+    mean_vector(3,m)=mean(x(3,:,m));
+    % To calc the covariance
+    Temp=zeros(50,3);
+    Temp(:,1)=x(1,:,m);
+    Temp(:,2)=x(2,:,m);
+    Temp(:,3)=x(3,:,m);
+    cov_matrix(:,:,m)=cov(Temp);
+% end loop.
+end
+% Copy the picture
+output=pic;
+% loop. go over all the pixels in the pic
+for m=1:480
+    for n=1:618
+        point=zeros(3,1);
+        point(1,1)=pic(m,n,1);
+        point(2,1)=pic(m,n,2);
+        point(3,1)=pic(m,n,3);
+% calc the E dis and the M dis between the mean vector
+        E_dist=zeros(5,1);
+        M_dist=zeros(5,1);
+        min_E_dist=100000;
+        min_M_dist=100000;
+        min_E_index=0;
+        min_M_index=0;
+        for k=1:5
+            % Euclidean distance
+            E_dist(k,1)=sqrt((point(1,1)-mean_vector(1,k))^2+(point(2,1)-mean_vector(2,k))^2+(point(3,1)-mean_vector(3,k))^2);
+            % Mahalanobis distance
+            M_dist(k,1)=(point-mean_vector(:,k))'*inv(cov_matrix(:,:,k))*(point-mean_vector(:,k))*10^(15);
+            
+            if E_dist(k,1)<min_E_dist
+                min_E_dist=E_dist(k,1);
+                min_E_index=k;
+            end
+            
+            if M_dist(k,1)<min_M_dist
+                min_M_dist=M_dist(k,1);
+                min_M_index=k;
+            end
+            
+        end
+        
+% classify
+    output(m,n,1)=colors(1,min_M_index);
+    output(m,n,2)=colors(2,min_M_index);
+    output(m,n,3)=colors(3,min_M_index);
+    end
+end
+% end loop.
+
+imshow(output);
