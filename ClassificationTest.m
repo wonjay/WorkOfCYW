@@ -229,5 +229,5 @@ for m=1:480
     end
 end
 % end loop.
+imwrite(output,'2ndTraining_output.jpg','jpg');
 
-imshow(output);
