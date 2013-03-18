@@ -1,13 +1,3 @@
-% read image, get the original matrix
-pic = imread('./Classification.png');
-
-% manually define random 10 points for each class
-x=zeros(3,10,5);
-colors=zeros(3,5);
-% class 1:Sea   class 2: Trees  class 3: Road   class 4: grass
-% class 5: Empty Area
-
-% Class 1 distinctive color. White
 colors(:,1)=[255;255;255];
 % class 1. Sea
 x(:,1,1)= pic(100,100,:);
